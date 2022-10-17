@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
+	<classpathentry kind="con" path="MULE_LIB/org.mule.tests.plugin/mule-tests-component-plugin/4.1.1"/>
+	<classpathentry exported="true" kind="con" path="MULE_RUNTIME/org.mule.tooling.server.4.4.0.ee"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src/main/mule"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/test/munit"/>
+	<classpathentry kind="lib" path="C:/Anypoint Studio/AnypointStudio/configuration/org.eclipse.osgi/735/data/mule-service-http-ee-1.7/lib/grizzly-http-server-2.3.36-MULE-024.jar" sourcepath="C:/Anypoint Studio/AnypointStudio/plugins/org.mule.tooling.server.4.4.0.ee_7.11.0.202206241916/mule/src/mule-runtime-distribution-sources-community-4.4.0-20220622.zip">
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="**/*"/>
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

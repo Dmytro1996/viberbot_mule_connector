@@ -1,0 +1,19 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:viberbot="http://www.mulesoft.org/schema/mule/viberbot"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+          http://www.mulesoft.org/schema/mule/viberbot http://www.mulesoft.org/schema/mule/viberbot/current/mule-viberbot.xsd">
+
+    <viberbot:config name="config" configId="configId">
+        <viberbot:connection requiredParameter="aValue" />
+    </viberbot:config>
+
+    <flow name="sayHiFlow">
+        <viberbot:say-hi person="Mariano Gonzalez"/>
+    </flow>
+
+    <flow name="retrieveInfoFlow">
+        <viberbot:retrieve-info config-ref="config"/>
+    </flow>
+
+</mule>
