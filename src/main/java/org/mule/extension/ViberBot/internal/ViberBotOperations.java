@@ -1,6 +1,6 @@
 package org.mule.extension.ViberBot.internal;
 
-import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
+import static org.mule.runtime.extension.api.annotation.param.MediaType.APPLICATION_JSON;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.runtime.extension.api.annotation.param.Config;
-import org.mule.runtime.extension.api.annotation.param.Connection;
 
 
 /**
@@ -25,7 +24,7 @@ public class ViberBotOperations {
 	
   private static final Logger logger=LoggerFactory.getLogger(ViberBotOperations.class);
   
-  @MediaType(value = ANY, strict = false)
+  @MediaType(value = APPLICATION_JSON, strict = false)
   public InputStream getSubscribers(@Config ViberBotConfiguration configuration) {
 	  try {
 		  URL url = new URL("https://chatapi.viber.com/pa/get_account_info");
@@ -40,7 +39,7 @@ public class ViberBotOperations {
 	  } 
   }
   
-  @MediaType(value = ANY, strict = false)
+  @MediaType(value = APPLICATION_JSON, strict = false)
   public InputStream sendMessage(@Config ViberBotConfiguration configuration, 
 		  String receiverId, String message) {
 	  try {
@@ -70,7 +69,7 @@ public class ViberBotOperations {
 	  return null;
   }
   
-  @MediaType(value= ANY, strict=false)
+  @MediaType(value= APPLICATION_JSON, strict=false)
   public void broadcast(@Config ViberBotConfiguration configuration, String message) {
 	  StringBuilder accountInfo=new StringBuilder();
 	  BufferedReader br=new BufferedReader(
