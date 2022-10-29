@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ViberBot.muleConnector</groupId>
     <artifactId>mulesoft-viberbot-connector</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.17</version>
     <packaging>mule-extension</packaging>
     <name>ViberBot Extension</name>
 

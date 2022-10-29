@@ -1,5 +1,6 @@
 package org.mule.extension.ViberBot.internal;
 
+import org.mule.runtime.extension.api.annotation.Expression;
 import org.mule.runtime.extension.api.annotation.Operations;
 import org.mule.runtime.extension.api.annotation.Sources;
 import org.mule.runtime.extension.api.annotation.connectivity.ConnectionProviders;
@@ -7,6 +8,7 @@ import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.param.display.DisplayName;
 import org.mule.runtime.extension.api.annotation.param.display.Placement;
+import org.mule.runtime.extension.api.annotation.param.display.Summary;
 
 /**
  * This class represents an extension configuration, values set in this class are commonly used across multiple
@@ -39,6 +41,23 @@ public class ViberBotConfiguration {
   @DisplayName("Webhook port")
   private int port;
   
+  @Parameter
+  @Placement(tab="General")
+  @DisplayName("Keystore Path")
+  private String keystore;
+  
+  @Parameter
+  @Placement(tab="General")
+  @DisplayName("Keystore Password")
+  private String keystorePass;
+  
+  @Parameter
+  @Placement(tab="General")
+  @DisplayName("Keystore Type")
+  @Summary("Options: JKS, JCEKS, PKCS12")
+  @Expression(org.mule.runtime.api.meta.ExpressionSupport.NOT_SUPPORTED)
+  private String keystoreType;
+  
   public String getToken(){
 	    return token;
   }
@@ -53,5 +72,17 @@ public class ViberBotConfiguration {
   
   public int getPort() {
 	  return port;
+  }
+  
+  public String getKeystore(){
+	    return keystore;
+  }
+  
+  public String getKeystorePass(){
+	    return keystorePass;
+  }
+  
+  public String getKeystoreType(){
+	  return keystoreType;
   }
 }

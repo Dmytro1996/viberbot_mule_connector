@@ -1,36 +1,36 @@
 package org.mule.extension.ViberBot.internal;
 
 import org.mule.extension.httphandler.HttpHandlerImpl;
-import org.mule.runtime.api.connection.ConnectionProvider;
 import org.mule.runtime.api.exception.MuleException;
 import org.mule.runtime.extension.api.annotation.execution.OnError;
 import org.mule.runtime.extension.api.annotation.execution.OnSuccess;
 import org.mule.runtime.extension.api.annotation.execution.OnTerminate;
 import org.mule.runtime.extension.api.annotation.param.Config;
-import org.mule.runtime.extension.api.annotation.param.Connection;
-import org.mule.runtime.extension.api.annotation.param.Content;
 import org.mule.runtime.extension.api.annotation.param.MediaType;
 import org.mule.runtime.extension.api.annotation.param.Optional;
 import org.mule.runtime.extension.api.annotation.param.Parameter;
 import org.mule.runtime.extension.api.annotation.source.EmitsResponse;
 import org.mule.runtime.api.message.Error;
 
-import static org.mule.runtime.extension.api.annotation.param.MediaType.ANY;
 import static org.mule.runtime.extension.api.annotation.param.MediaType.APPLICATION_JSON;
 
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.security.KeyStore;
 
-import org.mule.runtime.extension.api.runtime.operation.Result;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+
 import org.mule.runtime.extension.api.runtime.source.Source;
 import org.mule.runtime.extension.api.runtime.source.SourceCallback;
 import org.mule.runtime.extension.api.runtime.source.SourceCallbackContext;
 import org.mule.runtime.extension.api.runtime.source.SourceResult;
-import org.mule.runtime.http.api.domain.request.HttpRequestContext;
-import org.mule.runtime.http.api.server.async.HttpResponseReadyCallback;
-import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpsServer;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
 
 @EmitsResponse
 @MediaType(value=APPLICATION_JSON)
@@ -43,28 +43,36 @@ public class onNewMessage extends Source<InputStream, InputStream> {
 	@Optional(defaultValue = "/")
 	private String path;
 	
-	private HttpServer httpServer;
+	private HttpsServer httpsServer;
 	
 	private HttpHandlerImpl httpHandler;
 
 	@Override
 	public void onStart(SourceCallback arg0) throws MuleException {
-		// TODO Auto-generated method stub
-		/*httpServer=connectionProvider.connect();
-		httpServer.addRequestHandler(path, new RequestHandler() {
-
-			@Override
-			public void handleRequest(HttpRequestContext requestContext, HttpResponseReadyCallback responseCallback) {
-				// TODO Auto-generated method stub
-			}});*/
 		httpHandler=new HttpHandlerImpl(arg0);
 		try {
-			httpServer=HttpServer.create(new InetSocketAddress("localhost", 
+			httpsServer=HttpsServer.create(new InetSocketAddress("localhost", 
 					configuration.getPort()), 0);
-			httpServer.createContext(path, httpHandler);
-	        httpServer.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			SSLContext sslContext=SSLContext.getInstance("TLS");
+			char[] keystorePass=configuration.getKeystorePass().toCharArray();
+			KeyStore keystore=KeyStore.getInstance(configuration.getKeystoreType());
+			keystore.load(new FileInputStream(configuration.getKeystore()), keystorePass);
+			KeyManagerFactory keyFactory=KeyManagerFactory.getInstance("SunX509");
+			keyFactory.init(keystore, keystorePass);
+			sslContext.init(keyFactory.getKeyManagers(), null, null);
+			httpsServer.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+				public void configure(HttpsParameters params){
+			        SSLContext context=getSSLContext();
+			        SSLEngine sslEngine=context.createSSLEngine();
+			        params.setNeedClientAuth(false);
+			        params.setCipherSuites(sslEngine.getEnabledCipherSuites());
+			        params.setProtocols(sslEngine.getEnabledProtocols());
+			        params.setSSLParameters(context.getSupportedSSLParameters());
+				}
+			});
+			httpsServer.createContext("/callback", httpHandler);
+	        httpsServer.start();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}        
 	}
@@ -72,8 +80,8 @@ public class onNewMessage extends Source<InputStream, InputStream> {
 	@Override
 	public void onStop() {
 		// TODO Auto-generated method stub
-		if(httpServer!=null) {
-			httpServer.stop(0);
+		if(httpsServer!=null) {
+			httpsServer.stop(0);
 		}
 	}
 	
