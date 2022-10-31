@@ -3,6 +3,7 @@ package org.mule.extension.ViberBot.internal;
 import org.json.JSONObject;
 import org.mule.extension.httphandler.HttpHandlerImpl;
 import org.mule.runtime.api.exception.MuleException;
+import org.mule.runtime.extension.api.annotation.Alias;
 import org.mule.runtime.extension.api.annotation.execution.OnError;
 import org.mule.runtime.extension.api.annotation.execution.OnSuccess;
 import org.mule.runtime.extension.api.annotation.execution.OnTerminate;
@@ -42,11 +43,12 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 
+@Alias("onNewMessage")
 @EmitsResponse
 @MediaType(value=APPLICATION_JSON)
-public class onNewMessage extends Source<InputStream, InputStream> {
+public class ViberBotSource extends Source<InputStream, InputStream> {
 	
-	private final Logger logger=LoggerFactory.getLogger(onNewMessage.class);
+	private final Logger logger=LoggerFactory.getLogger(ViberBotSource.class);
 	
 	@Config
 	private ViberBotConfiguration configuration;
@@ -147,9 +149,9 @@ public class onNewMessage extends Source<InputStream, InputStream> {
 		}
 		JSONObject jsonObject=new JSONObject(response.toString());
 		if(jsonObject.getInt("status")!=0) {
-			System.out.println("An error occured while setting webhook:\n" + response.toString());
+			logger.error("An error occured while setting webhook:\n" + response.toString());
 		} else {
-			System.out.println("Webhook was set:\n" + response.toString());
+			logger.info("Webhook was set:\n" + response.toString());
 		}
 	}
 

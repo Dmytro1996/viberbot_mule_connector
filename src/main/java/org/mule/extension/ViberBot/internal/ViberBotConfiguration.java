@@ -15,7 +15,7 @@ import org.mule.runtime.extension.api.annotation.param.display.Summary;
  * operations since they represent something core from the extension.
  */
 @Operations(ViberBotOperations.class)
-@Sources(onNewMessage.class)
+@Sources(ViberBotSource.class)
 @ConnectionProviders(ViberBotConnectionProvider.class)
 public class ViberBotConfiguration {
   
