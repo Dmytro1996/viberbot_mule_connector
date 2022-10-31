@@ -58,6 +58,11 @@ public class ViberBotConfiguration {
   @Expression(org.mule.runtime.api.meta.ExpressionSupport.NOT_SUPPORTED)
   private String keystoreType;
   
+  @Parameter
+  @Placement(tab="General")
+  @DisplayName("Webhook Host")
+  private String webhookHostName;
+  
   public String getToken(){
 	    return token;
   }
@@ -84,5 +89,9 @@ public class ViberBotConfiguration {
   
   public String getKeystoreType(){
 	  return keystoreType;
+  }
+  
+  public String getWebhookHostName() {
+	  return webhookHostName;
   }
 }
